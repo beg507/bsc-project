@@ -14,8 +14,9 @@ class Planet:
     AU = 149.6e6*1000 # astronomical unit in metres
     G = 6.67428e-11 # gravitational constant
     scale = 250 / AU # 1AU = 100px
-    time_simulated = 3600*24 # seconds in a day
+    timestep = 3600*24 # seconds in a day (this is how much movement is updated every 60 FPS)
 
+    # initialisation of class asstributes
     def __init__(self, x, y, radius, color, mass):
         self.x = x
         self.y = y
@@ -23,13 +24,13 @@ class Planet:
         self.color = color
         self.mass = mass
 
-        # velocity
+        # initial velocity
         self.x_v = 0
         self.y_v = 0
 
         self.sun = False # the sun isn't a planet
         self.distance_to_sun = 0
-        self.orbit = []
+        self.orbit = [] # array of orbit paths
 
     def draw(self, win):
         # centering
@@ -47,9 +48,9 @@ class Planet:
                 y = y * self.scale + width / 2
                 updated_points.append((x,y))
 
-            pygame.draw.lines(win, self.color, False, updated_points, 2)
+            pygame.draw.lines(win, self.color, False, updated_points, 2) # drawing the orbit lines
         
-        pygame.draw.circle(win, self.color, (x,y), self.radius)
+        pygame.draw.circle(win, self.color, (x,y), self.radius) # drawing the planets
 
         # displaying the distance to the sun on the planets as they move
         if not self.sun:
@@ -74,21 +75,28 @@ class Planet:
         F_y = math.sin(theta) * F
         return F_x, F_y
 
+    # updating planet positions considering the graviational force
     def update_position(self, planets):
-        F_x_net = F_y_net = 0
+        F_x_net = F_y_net = 0 # inital force on planet is zero
+        # calculating the total force on the planet from all the other planets (and sun)
         for planet in planets:
-            if self == planet:
+            if self == planet: # don't calculate the force with the planet and itself
                 continue
 
-            fx, fy = self.grav_attraction(planet)
+            fx, fy = self.grav_attraction(planet) # taking F_x and F_y from grav_attraction
+            # summing the forces
             F_x_net += fx
             F_y_net += fy
 
-        self.x_v += F_x_net / self.mass * self.time_simulated
-        self.y_v += F_y_net / self.mass * self.time_simulated
-        self.x += self.x_v * self.time_simulated
-        self.y += self.y_v * self.time_simulated
+        # F=ma velocity calculation
+        self.x_v += F_x_net / self.mass * self.timestep
+        self.y_v += F_y_net / self.mass * self.timestep
+
+        # position calculation
+        self.x += self.x_v * self.timestep
+        self.y += self.y_v * self.timestep
         
+        # appending x and y positions of orbits
         self.orbit.append((self.x, self.y))
 
 # defining colours
@@ -102,7 +110,7 @@ white = (255, 255, 255)
 font = pygame.font.SysFont("Arial", 12)
 
 # creating pygame event loop to keep the visualtion window open while the simulation is running
-# 
+
 def window_loop():
     running = True
     clock = pygame.time.Clock()
@@ -125,7 +133,6 @@ def window_loop():
     
     planets = [sun, earth, mars, mercury, venus]
 
-
     while running:
         clock.tick(60) # set frame rate to 60 FPS
         pygame_window.fill((0,0,0)) # so planets don't have a planet size trail
@@ -141,7 +148,7 @@ def window_loop():
         pygame.display.update() # continuously update the display
 
     pygame.quit()
-#call the function
 
+# call the function
 window_loop()
 
