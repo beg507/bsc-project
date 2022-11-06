@@ -50,6 +50,7 @@ class Planet:
             
             pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
 
+            #draws the black lines to create the gap in the orbit
             if len(updated_points) > 18:
                 pygame.draw.lines(pygame_window, black, False, (updated_points[-18], updated_points[-17]), 5)
                 pygame.draw.lines(pygame_window, black, False, (updated_points[-17], updated_points[-16]), 5)
