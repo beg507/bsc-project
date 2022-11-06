@@ -5,7 +5,7 @@ import math
 pygame.init()
 
 # setting up pygame visualistation window (width and height of window, as well as window title)
-width, height = 900, 900
+width, height = 600, 600
 pygame_window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Travel to Pluto")
 
@@ -47,9 +47,28 @@ class Planet:
                 x = x * self.scale + width / 2
                 y = y * self.scale + width / 2
                 updated_points.append((x,y))
+            
+            pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
 
-            pygame.draw.lines(win, self.color, False, updated_points, 2) # drawing the orbit lines
-        
+            if len(updated_points) > 18:
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-18], updated_points[-17]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-17], updated_points[-16]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-16], updated_points[-15]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-15], updated_points[-14]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-14], updated_points[-13]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-13], updated_points[-12]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-12], updated_points[-11]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-11], updated_points[-10]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-10], updated_points[-9]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-9], updated_points[-8]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-8], updated_points[-7]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-7], updated_points[-6]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-6], updated_points[-5]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-5], updated_points[-4]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-4], updated_points[-3]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-3], updated_points[-2]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-2], updated_points[-1]), 5)
+
         pygame.draw.circle(win, self.color, (x,y), self.radius) # drawing the planets
 
         # displaying the distance to the sun on the planets as they move
@@ -105,7 +124,7 @@ blue = (100, 149, 237)
 red = (188, 39, 50)
 grey = (80, 78, 81)
 white = (255, 255, 255)
-
+black = (0,0,0)
 # setting font
 font = pygame.font.SysFont("Arial", 12)
 
@@ -120,10 +139,10 @@ def window_loop():
     sun.sun = True
 
     earth = Planet(1*Planet.AU, 0, 16, blue, 5.9742*10**24)
-    earth.y_v = 29.783 * 1000 
+    earth.y_v = -29.783 * 1000 #negative to make planet orbit counter-clockwise
     
     mars = Planet(1.524 * Planet.AU, 0, 12, red, 6.39 * 10**23)
-    mars.y_v = 24.077 * 1000
+    mars.y_v = -24.077 * 1000
 
     mercury = Planet(0.387 * Planet.AU, 0, 8, grey, 3.30 * 10**23)
     mercury.y_v = -47.4 * 1000
