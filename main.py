@@ -6,7 +6,7 @@ pygame.init()
 
 # setting up pygame visualistation window (width and height of window, as well as window title)
 width, height = 600, 600
-pygame_window = pygame.display.set_mode((width, height))
+pygame_window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Travel to Pluto")
 
 # creating a planet class
@@ -120,12 +120,22 @@ class Planet:
         self.orbit.append((self.x, self.y))
 
 # defining colours
-yellow = (255,255,0)
-blue = (100, 149, 237)
-red = (188, 39, 50)
-grey = (80, 78, 81)
+sun_colour = (255,255,0)
+
+
+earth_colour = (100, 149, 237) #blue
+mars_colour = (188, 39, 50) # red
+mercury_colour = (80, 78, 81) #grey
+venus_colour = (255, 198, 153) #beige
+jupter_colour = (92, 64, 51) #dark brown
+saturn_colour = (219, 190, 163) # light brown
+uranus_colour = (107, 217, 221) #light blue
+neptune_colour = (38, 13, 203) # dark blue
+pluto_colour = (250, 236, 183) #cream
+
 white = (255, 255, 255)
 black = (0,0,0)
+
 # setting font
 font = pygame.font.SysFont("Arial", 12)
 
@@ -136,22 +146,38 @@ def window_loop():
     clock = pygame.time.Clock()
 
     # sun and planets initialisation (x, y, radius, color, mass)
-    sun = Planet(0,0, 30, yellow, 1.98892*10**30)
+    # RADIUS IS NOT PLANET RADIUS, IT IS FOR VISUALIZATION
+    sun = Planet(0,0, 30, sun_colour, 1.98892*10**30)
     sun.sun = True
 
-    earth = Planet(1*Planet.AU, 0, 16, blue, 5.9742*10**24)
-    earth.y_v = -29.783 * 1000 #negative to make planet orbit counter-clockwise
+    mercury = Planet(0.4* Planet.AU, 0, 8, mercury_colour, 3.30 * 10**23)
+    mercury.y_v = -47.4 * 1000 #km/s #negative to make planet orbit counter-clockwise
     
-    mars = Planet(1.524 * Planet.AU, 0, 12, red, 6.39 * 10**23)
+    venus = Planet(0.7 * Planet.AU, 0, 12, venus_colour, 4.8685 * 10**24)
+    venus.y_v = -35.02 * 1000
+
+    earth = Planet(1*Planet.AU, 0, 15, earth_colour, 5.9742*10**24)
+    earth.y_v = -29.783 * 1000 
+
+    mars = Planet(1.5 * Planet.AU, 0, 10, mars_colour, 6.39 * 10**23)
     mars.y_v = -24.077 * 1000
 
-    mercury = Planet(0.387 * Planet.AU, 0, 8, grey, 3.30 * 10**23)
-    mercury.y_v = -47.4 * 1000
+    jupiter = Planet(5.2 * Planet.AU, 0, 30, jupter_colour, 1898*10**24)
+    jupiter.y_v = -13.1 * 1000
 
-    venus = Planet(0.723 * Planet.AU, 0, 14, white, 4.8685 * 10**24)
-    venus.y_v = -35.02 * 1000
-    
-    planets = [sun, earth, mars, mercury, venus]
+    saturn = Planet(9.6 * Planet.AU, 0, 25, saturn_colour, 568*10**24)
+    saturn.y_v = -9.7 * 1000
+
+    uranus = Planet(19.2 * Planet.AU, 0, 20, uranus_colour, 86.6*10**24)
+    uranus.y_v = -6.8 * 1000
+
+    neptune = Planet(30 * Planet.AU, 0, 20, neptune_colour, 102*10**24)
+    neptune.y_v = -5.4 * 1000
+
+    pluto = Planet(39.5 * Planet.AU, 0, 4, pluto_colour, 0.0130*10**24)
+    pluto.y_v = -4.7 * 1000
+
+    planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
     while running:
         clock.tick(60) # set frame rate to 60 FPS
