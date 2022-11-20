@@ -1,0 +1,35 @@
+# Imports
+from pygame.locals import *
+import pygame
+
+# Main init
+pygame.init()
+
+# Basic vars
+run = True
+s_width = 1000
+s_height = 600
+
+# Making display screen. Don't forget the last tag!
+screen = pygame.display.set_mode((s_width, s_height), RESIZABLE)
+
+# Main loop
+while run:
+    # event detection
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            run = False
+        # The part which matters for our purposes
+        if event.type == WINDOWRESIZED:
+            s_width, s_height = screen.get_width(), screen.get_height()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                run = False
+    # Test line to see if the window resizing works properly
+    pygame.draw.line(screen, (255, 255, 255), (int(0.3*s_width), int(0.25*s_height)), (int(0.8*s_width), int(0.25*s_height)))
+    # Final flip
+    #pygame.display.flip()
+    pygame.display.update()
+
+# Quit
+pygame.quit()

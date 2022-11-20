@@ -1,13 +1,14 @@
 # importing packages and initialisng 
-from turtle import color
+#from turtle import color
+from pygame.locals import *
 import pygame
 import math
 pygame.init()
 
-# setting up pygame visualistation window (width and height of window, as well as window title)
-width, height = 600, 600
-pygame_window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-pygame.display.set_caption("Travel to Pluto")
+pygame.display.set_caption("Travel to Pluto") #name of pygame window
+
+CONSTANT = 12000 #controls the zooming (rescaling) of the simulation in the window
+
 
 # creating a planet class
 class Planet:
@@ -28,14 +29,17 @@ class Planet:
         self.x_v = 0
         self.y_v = 0
 
-        self.sun = False # the sun isn't a planet
+        self.sun = False # the planets are not suns
         self.distance_to_sun = 0
         self.orbit = [] # array of orbit paths
 
-    def draw(self, win):
+    def draw(self, win, width, height, pygame_window):
         # centering
         x = self.x * self.scale + width / 2
         y = self.y * self.scale + height / 2
+
+        # resize scaling
+        resize_scale = height/CONSTANT
 
         updated_points = []
 
@@ -44,40 +48,42 @@ class Planet:
             
             for point in self.orbit:
                 x, y = point
-                x = x * self.scale + width / 2
-                y = y * self.scale + width / 2
-                updated_points.append((x,y))
-            
-            pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
+                x = x * self.scale * resize_scale + width / 2
+                y = y * self.scale * resize_scale + height / 2
 
+                # scale the orbit of the planets to the size of the screen
+
+                updated_points.append((x,y))
+
+            pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
             #draws the black lines to create the gap in the orbit
             if len(updated_points) > 18:
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-18], updated_points[-17]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-17], updated_points[-16]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-16], updated_points[-15]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-15], updated_points[-14]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-14], updated_points[-13]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-13], updated_points[-12]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-12], updated_points[-11]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-11], updated_points[-10]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-10], updated_points[-9]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-9], updated_points[-8]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-8], updated_points[-7]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-7], updated_points[-6]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-6], updated_points[-5]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-5], updated_points[-4]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-4], updated_points[-3]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-3], updated_points[-2]), 5)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-2], updated_points[-1]), 5)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-18], updated_points[-17]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-17], updated_points[-16]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-16], updated_points[-15]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-15], updated_points[-14]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-14], updated_points[-13]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-13], updated_points[-12]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-12], updated_points[-11]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-11], updated_points[-10]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-10], updated_points[-9]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-9], updated_points[-8]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-8], updated_points[-7]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-7], updated_points[-6]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-6], updated_points[-5]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-5], updated_points[-4]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-4], updated_points[-3]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-3], updated_points[-2]), 10)
+                pygame.draw.lines(pygame_window, black, False, (updated_points[-2], updated_points[-1]), 10)
 
-        pygame.draw.circle(win, self.color, (x,y), self.radius) # drawing the planets
+        pygame.draw.circle(win, self.color, (x,y), self.radius*resize_scale) # drawing the planets
 
         # displaying the distance to the sun on the planets as they move
         if not self.sun:
             distance_text = font.render(f"{round(self.distance_to_sun/1000, 1)}km", 1, white)
             # setting the text position to be in the centre of the planets
             win.blit(distance_text,(x-distance_text.get_width()/2, y+distance_text.get_height()))
-   
+
     def grav_attraction(self, other_body):
         other_body_x, other_body_y = other_body.x, other_body.y
         # x and y distances between two bodies
@@ -121,8 +127,6 @@ class Planet:
 
 # defining colours
 sun_colour = (255,255,0)
-
-
 earth_colour = (100, 149, 237) #blue
 mars_colour = (188, 39, 50) # red
 mercury_colour = (80, 78, 81) #grey
@@ -142,12 +146,14 @@ font = pygame.font.SysFont("Arial", 12)
 # creating pygame event loop to keep the visualtion window open while the simulation is running
 
 def window_loop():
+    width, height = 600, 600
+    pygame_window = pygame.display.set_mode((width, height), RESIZABLE)
     running = True
     clock = pygame.time.Clock()
 
     # sun and planets initialisation (x, y, radius, color, mass)
     # RADIUS IS NOT PLANET RADIUS, IT IS FOR VISUALIZATION
-    sun = Planet(0,0, 30, sun_colour, 1.98892*10**30)
+    sun = Planet(width/2,height/2, 30, sun_colour, 1.98892*10**30)
     sun.sun = True
 
     mercury = Planet(0.4* Planet.AU, 0, 8, mercury_colour, 3.30 * 10**23)
@@ -186,11 +192,16 @@ def window_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == WINDOWRESIZED:
+                width, height = pygame_window.get_width(), pygame_window.get_height()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                 run = False
+
 
         for planet in planets:
             planet.update_position(planets)
-            planet.draw(pygame_window)
-        
+            planet.draw(pygame_window, width, height, pygame_window)
         pygame.display.update() # continuously update the display
 
     pygame.quit()
