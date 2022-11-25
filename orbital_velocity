@@ -1,0 +1,14 @@
+from scipy import constants as sc
+from astropy import constants as ac
+from numpy import sqrt
+
+G = sc.G
+au = sc.au
+M_sun = ac.M_sun.value
+
+a_venus = 0.72*sc.au
+
+def orbital_velocity(a):
+    return sqrt(G*M_sun/a)
+
+print(orbital_velocity(a_venus))

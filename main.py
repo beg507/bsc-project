@@ -3,11 +3,13 @@
 from pygame.locals import *
 import pygame
 import math
+#from orbital_velocity import orbital_velocity
 pygame.init()
 
 pygame.display.set_caption("Travel to Pluto") #name of pygame window
 
-CONSTANT = 12000 #controls the zooming (rescaling) of the simulation in the window
+scale_au = 5.5
+CONSTANT = scale_au*250 #controls the zooming (rescaling) of the simulation in the window
 
 
 # creating a planet class
@@ -55,26 +57,8 @@ class Planet:
 
                 updated_points.append((x,y))
 
-            pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
-            #draws the black lines to create the gap in the orbit
-            if len(updated_points) > 18:
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-18], updated_points[-17]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-17], updated_points[-16]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-16], updated_points[-15]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-15], updated_points[-14]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-14], updated_points[-13]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-13], updated_points[-12]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-12], updated_points[-11]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-11], updated_points[-10]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-10], updated_points[-9]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-9], updated_points[-8]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-8], updated_points[-7]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-7], updated_points[-6]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-6], updated_points[-5]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-5], updated_points[-4]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-4], updated_points[-3]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-3], updated_points[-2]), 10)
-                pygame.draw.lines(pygame_window, black, False, (updated_points[-2], updated_points[-1]), 10)
+            #pygame.draw.lines(pygame_window, self.color, False, updated_points, 2) # drawing the orbit lines
+            pygame.draw.lines(pygame_window, self.color, False, updated_points[-40:], 2) # drawing the orbit lines
 
         pygame.draw.circle(win, self.color, (x,y), self.radius*resize_scale) # drawing the planets
 
@@ -159,7 +143,7 @@ def window_loop():
     mercury = Planet(0.4* Planet.AU, 0, 8, mercury_colour, 3.30 * 10**23)
     mercury.y_v = -47.4 * 1000 #km/s #negative to make planet orbit counter-clockwise
     
-    venus = Planet(0.7 * Planet.AU, 0, 12, venus_colour, 4.8685 * 10**24)
+    venus = Planet(0.72 * Planet.AU, 0, 12, venus_colour, 4.8685 * 10**24)
     venus.y_v = -35.02 * 1000
 
     earth = Planet(1*Planet.AU, 0, 15, earth_colour, 5.9742*10**24)
