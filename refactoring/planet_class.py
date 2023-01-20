@@ -5,8 +5,7 @@ import colours
 
 pygame.font.init()
 
-scale_au = 5.5
-CONSTANT = scale_au*250 #controls the zooming (rescaling) of the simulation in the window
+SCALE = 2000 #controls the zooming (rescaling) of the simulation in the window
 
 # setting font
 font = pygame.font.SysFont("Arial", 12)
@@ -40,7 +39,7 @@ class Planet:
         y = self.y * self.scale + height / 2
 
         # resize scaling
-        resize_scale = height/CONSTANT
+        resize_scale = height/SCALE
 
         updated_points = []
 
