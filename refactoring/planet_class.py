@@ -5,7 +5,7 @@ import colours
 
 pygame.font.init()
 
-SCALE = 2000 #controls the zooming (rescaling) of the simulation in the window
+SCALE = 1000 #controls the zooming (rescaling) of the simulation in the window
 
 # setting font
 font = pygame.font.SysFont("Arial", 12)

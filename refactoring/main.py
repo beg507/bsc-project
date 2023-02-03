@@ -56,7 +56,10 @@ def window_loop():
     pluto = Planet(39.5 * Planet.AU, 0, 4, pluto_colour, 0.0130*10**24)
     pluto.y_v = -4.7 * 1000
 
-    planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
+    #spaceship = Planet(1.000001*Planet.AU, 0, 4, pluto_colour, 3000)
+   # spaceship.y_v = -29.783 * 1000 
+
+    planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto, spaceship]
 
     while running:
         clock.tick(60) # set frame rate to 60 FPS

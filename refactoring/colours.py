@@ -1,4 +1,4 @@
-# defining colours
+# defining colours used throughout the program
 sun_colour = (255,255,0)
 earth_colour = (100, 149, 237) #blue
 mars_colour = (188, 39, 50) # red
