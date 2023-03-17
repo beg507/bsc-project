@@ -5,7 +5,7 @@ import colours
 
 pygame.font.init()
 
-SCALE = 1000 #controls the zooming (rescaling) of the simulation in the window
+SCALE = 3000 #controls the zooming (rescaling) of the simulation in the window
 
 # setting font
 font = pygame.font.SysFont("Arial", 12)
@@ -81,6 +81,7 @@ class Planet:
         theta = math.atan2(distance_y, distance_x)
         F_x = math.cos(theta) * F
         F_y = math.sin(theta) * F
+        print("force y: ", F_y)
         return F_x, F_y
 
     # updating planet positions considering the graviational force
@@ -96,13 +97,19 @@ class Planet:
             F_x_net += fx
             F_y_net += fy
 
+            print("Force y net: ", F_y_net)
+
         # F=ma velocity calculation
         self.x_v += F_x_net / self.mass * self.timestep
         self.y_v += F_y_net / self.mass * self.timestep
 
+        print("y velocity: ", self.y_v)
+
         # position calculation
         self.x += self.x_v * self.timestep
         self.y += self.y_v * self.timestep
+
+        print("y position: ", self.y)
         
         # appending x and y positions of orbits
         self.orbit.append((self.x, self.y))

@@ -26,5 +26,5 @@ print("The time period of Pluto is", pluto_timeperiod/(60*60*24*365), "years") #
 print("The mission will take", pluto_nograv_mission_time/(60*60*24*365), "years") # in years
 print("The semimajor axis of the spaceship is", spaceship_semimajoraxis_pluto_nograv_mission, "metres or", spaceship_semimajoraxis_pluto_nograv_mission/149597870691, "AU")
 print("Pluto needs to be", pluto_nograv_spaceship_arrival_angle, "degrees from the point of spaceship arrival at the time of launch")
-print("Hence, the angle between Earth and Pluto at this time needs to be", earth_pluto_launch_angle, "degrees")
+print("Hence, the angle between Earth and Pluto at this time needs to be", earth_pluto_launch_angle, "degrees")   
 print(pluto_nograv_mission_time_ver2/(60*60*24*365))

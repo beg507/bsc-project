@@ -1,7 +1,5 @@
 # this file is the main file needed to run the simulation.
 
-
-
 # importing packages and initialisng 
 #from turtle import color
 from pygame.locals import *
@@ -10,6 +8,9 @@ import math
 from colours import *
 import planet_class
 from planet_class import Planet
+import ephemeris 
+from ephemeris import *
+import scipy
 
 #from orbital_velocity import orbital_velocity
 pygame.init()
@@ -29,20 +30,26 @@ def window_loop():
     sun = Planet(width/2,height/2, 30, sun_colour, 1.98892*10**30)
     sun.sun = True
 
+    earth = Planet(ephemeris.x_pos_earth, -ephemeris.y_pos_earth, 15, earth_colour, 5.9742*10**24)
+    earth.y_v = scipy.sqrt(ephemeris.y_vel_earth**2 + ephemeris.x_vel_earth**2) #-29.78*1000
+
+    jupiter = Planet(ephemeris.x_pos_jupiter, ephemeris.y_pos_jupiter, 30, jupter_colour, 1898*10**24)
+    jupiter.y_v = ephemeris.y_vel_jupiter
+
+    pluto = Planet(ephemeris.x_pos_pluto, ephemeris.y_pos_pluto, 4, pluto_colour, 0.0130*10**24)
+    pluto.y_v = ephemeris.y_vel_pluto
+
+
+
+
     mercury = Planet(0.4* Planet.AU, 0, 8, mercury_colour, 3.30 * 10**23)
     mercury.y_v = -47.4 * 1000 #km/s #negative to make planet orbit counter-clockwise
     
     venus = Planet(0.72 * Planet.AU, 0, 12, venus_colour, 4.8685 * 10**24)
     venus.y_v = -35.02 * 1000
 
-    earth = Planet(1*Planet.AU, 0, 15, earth_colour, 5.9742*10**24)
-    earth.y_v = -29.783 * 1000 
-
     mars = Planet(1.5 * Planet.AU, 0, 10, mars_colour, 6.39 * 10**23)
     mars.y_v = -24.077 * 1000
-
-    jupiter = Planet(5.2 * Planet.AU, 0, 30, jupter_colour, 1898*10**24)
-    jupiter.y_v = -13.1 * 1000
 
     saturn = Planet(9.6 * Planet.AU, 0, 25, saturn_colour, 568*10**24)
     saturn.y_v = -9.7 * 1000
@@ -53,13 +60,9 @@ def window_loop():
     neptune = Planet(30 * Planet.AU, 0, 20, neptune_colour, 102*10**24)
     neptune.y_v = -5.4 * 1000
 
-    pluto = Planet(39.5 * Planet.AU, 0, 4, pluto_colour, 0.0130*10**24)
-    pluto.y_v = -4.7 * 1000
+    #planets = [sun, earth, jupiter, pluto]
+    planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
-    #spaceship = Planet(1.000001*Planet.AU, 0, 4, pluto_colour, 3000)
-   # spaceship.y_v = -29.783 * 1000 
-
-    planets = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto, spaceship]
 
     while running:
         clock.tick(60) # set frame rate to 60 FPS
