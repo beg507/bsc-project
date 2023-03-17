@@ -1,10 +1,10 @@
 # bsc-project
 
+- Current folder
+    - `main.py` current running simulation
+    - accompanying data files for `main.py`
 - Dump folder - for no longer needed files
-- Refactoring folder
-    - `colours.py` contains colour definitions
-    - `main.py` is what you run to view the simulation
-    - `planet_class.py` is where the planets and solar system are defined (positions and movement)
+- Refactoring folder - contains dump cache files currently
 - Testing folder
     - `mars_mission.py` contains calculations for a Hohmann transfer to Mars with values that agree with literature
     - `pluto_grav_mission.py` contains calculations for the bi-elliptical transfer (two Hohmann transfers) needed to get from Earth to Pluto with a gravity assist at Jupiter
