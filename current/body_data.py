@@ -36,6 +36,9 @@ jupiter_radius = 69911
 jupiter_mass = 1.89813 *10**27
 jupiter_a = AU * 5.2
 jupiter_hill_sphere = jupiter_a * (jupiter_mass/(3*sun_mass))**(1/3)
+jupiter_soi = ((jupiter_mass/sun_mass)**(2/5)) * jupiter_a
+print(jupiter_hill_sphere)
+print(jupiter_soi)
 
 
 saturn_radius = 58232
