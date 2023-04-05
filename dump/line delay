@@ -1,7 +1,0 @@
-updated_points = [0,1,2,3,4,5,6,7,8,9,10]
-sliced_points = updated_points[4:len(updated_points):1]
-
-print(sliced_points)
-
-if updated_points[4] == sliced_points[0]:
-    print("yay")

@@ -8,14 +8,14 @@ from body_data import *
 
      # HELIOCENTRIC
 def two_body_ode (t, state): #newton's law of gravitation
-    r = state[:3]
+    r = state[:2]
     a = (-(body_data.sun_mass *body_data.G_km) * r / np.linalg.norm(r)**3)
     # np.linalg.norm is used to calculate the norm of a vector
     return np.array([state[2], state[3], a[0], a[1]])
 
 def two_body_ode_jupiter (t, state): #newton's law of gravitation
-    r = state[:3]
-    a = (-(body_data.jupiter_mass *body_data.G_km) * r / np.linalg.norm(r)**3)
+    r = state[:2]
+    a = (-(body_data.jupiter_mass *body_data.G_km) * r / np.linalg.norm(r)**3) #+ (-(body_data.sun_mass *body_data.G_km) * r / np.linalg.norm(r)**3)
     # np.linalg.norm is used to calculate the norm of a vector
     return np.array([state[2], state[3], a[0], a[1]])
 
@@ -55,6 +55,7 @@ enter_count = 0
 exit_step = []
 exited = 0
 
+
 inside_hill_sphere_jupiter = False
 
 def angle_between(x1,y1,x2,y2):
@@ -65,38 +66,104 @@ for step in range( steps - 1 ):
     states_earth[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_earth[ step ], dt )
     states_jupiter[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_jupiter[ step ], dt )
     states_pluto[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_pluto[ step ], dt )
+    
+    jupiter_pos = states_jupiter[step + 1, :2]
 
-    print("flag 1:", inside_hill_sphere_jupiter)
+    #print("flag 1:", inside_hill_sphere_jupiter)
     if inside_hill_sphere_jupiter == False:
-        print("flag 1.5:", inside_hill_sphere_jupiter)
+        #print("flag 1.5:", inside_hill_sphere_jupiter)
+        
         states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_ship[ step ], dt )
         
-        print("flag 2:", inside_hill_sphere_jupiter)
+        #print("flag 2:", inside_hill_sphere_jupiter)
         #print( "ship_pos vs jdt_dist", np.linalg.norm(ship_pos), jdt_dist)
 
-        ship_pos = states_ship[step + 1, :2]
-        jupiter_pos = states_jupiter[step + 1, :2]
-        jat_dist = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos) # distance between jupiter and ship at jupiter arrival time
-        jdt_dist = np.linalg.norm(jupiter_pos) + body_data.jupiter_hill_sphere # distance between far edge of hill sphere and sun T jupiter departure time
+        ship_pos_approach = states_ship[step + 1, :2]
+        
+        jat_dist = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_approach) # distance between jupiter and ship at jupiter arrival time
 
+
+        print("states_ship before if", states_ship[step])
 
     if abs(jat_dist) < abs(body_data.jupiter_hill_sphere):
         inside_hill_sphere_jupiter = True
-        states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_ship[ step ], dt )
-        print("flag 3:", inside_hill_sphere_jupiter, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                #print("states_ship: ", states_ship [enter_step])
 
-    if abs(jdt_dist) < abs(np.linalg.norm(ship_pos)):
-            print("flag 3.5:", inside_hill_sphere_jupiter)
+    if inside_hill_sphere_jupiter == True:
+        enter_step.append(step)
+        enter_hill_sphere_step = enter_step[0]
+        print("states_ship[enter_hill_sphere_step]", states_ship[enter_hill_sphere_step])
+        
+        #constant values
+        jat_jupiter_vx = states_jupiter[enter_hill_sphere_step, 2]
+        jat_jupiter_vy = states_jupiter[enter_hill_sphere_step, 3]
+        jat_ship_vx = states_ship[enter_hill_sphere_step,2]
+        jat_ship_vy = states_ship[enter_hill_sphere_step,3]
+        jat_hyp_ex_vx_ship = jat_ship_vx - jat_jupiter_vx
+        jat_hyp_ex_vy_ship = jat_ship_vy - jat_jupiter_vy
+        ###
+        
+        print("before changing: ", states_ship[enter_hill_sphere_step])
+        states_ship[enter_hill_sphere_step] = [states_ship[enter_hill_sphere_step, 0], states_ship[enter_hill_sphere_step, 1], jat_hyp_ex_vx_ship, jat_hyp_ex_vy_ship]
+        print("after changing: ", states_ship[enter_hill_sphere_step])
+        
+
+        #states_ship = np.delete(states_ship, enter_hill_sphere_step, axis=0)
+        #new_row = np.array([x_pos_enter_step, y_pos_enter_step, jat_hyp_ex_vx_ship, jat_hyp_ex_vy_ship])
+        #states_ship = np.insert(states_ship, enter_hill_sphere_step, new_row, axis=0)
+
+        states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_ship[ step ], dt )
+        print(states_ship)
+        np.savetxt('states_ship_in_true.txt', states_ship)
+        break
+        print("states_ship[enter_hill_sphere_step-1]", states_ship[10639-1])
+        print("states_ship[enter_hill_sphere_step]", states_ship[10639])
+        print("states_ship[enter_hill_sphere_step+1]", states_ship[10639+1])
+        print("states_ship[step]", states_ship[step])
+        
+
+        print("flag 3:", inside_hill_sphere_jupiter)
+
+        ship_pos_leave = states_ship[step + 1, :2]
+        jat_dist_leave = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_leave)
+        
+        if abs(jat_dist_leave) > 0 and abs(jat_dist_leave) > body_data.jupiter_hill_sphere:
+            #np.savetxt('states_ship.txt', states_ship)
+            
+            break
+            jdt_jup_x = states_jupiter[step, 0]
+            jdt_jup_y = states_jupiter[step, 1]
+            jdt_ship_x = states_ship[step, 0]
+            jdt_ship_y = states_ship[step, 1]
+
+            deflection_angle = angle_between(jdt_jup_x, jdt_jup_y, jdt_ship_x, jdt_jup_y)
+
+            jdt_jupiter_vx = states_jupiter[step, 2]
+            jdt_jupiter_vy = states_jupiter[step, 3]
+
+            jdt_hyp_ex_vx_ship = jat_hyp_ex_vx_ship * math.cos(deflection_angle)
+            jdt_hyp_ex_vy_ship = jat_hyp_ex_vy_ship * math.sin(deflection_angle)
+
+            jdt_ship_vx = jdt_hyp_ex_vx_ship + jdt_jupiter_vx
+            jdt_ship_vy = jdt_hyp_ex_vy_ship + jdt_jupiter_vy
+
+            print("1:",states_ship[step])
+            states_ship = np.delete(states_ship, step, axis=0)
+            new_row_2 = np.array([states_ship[step, 0], states_ship[step, 1], jdt_hyp_ex_vx_ship, jdt_hyp_ex_vy_ship])
+            states_ship = np.insert(states_ship, step, new_row_2, axis=0)
+            print("2:",states_ship[step])
+
             inside_hill_sphere_jupiter = False
 
+            states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_ship[ step ], dt )
 
-print("flag 4: ",inside_hill_sphere_jupiter)  
+            print("flag 3.5:", inside_hill_sphere_jupiter)
+            break
 
+        entered += 1
 
         # print("Ship has entered Jupiter's Hill Sphere at step", step, "and distance to Jupiter is", dist, "km")
         # print("Inside hill sphere Jupiter is", inside_hill_sphere_jupiter)
-           
+
 #print( states )
 #print("enter step value: ", enter_step)
 #print("At Jupiter Arrival Time (JAT):")
@@ -114,8 +181,8 @@ print("flag 4: ",inside_hill_sphere_jupiter)
 
 #print("Deflection angle:",deflection_angle)
 
-print("enter step:", enter_step)
-print("exit step:", exit_step)
+##print("enter step:", enter_step)
+#print("exit step:", exit_step)
 
 # PLOTTING
 plt.style.use( 'dark_background' )

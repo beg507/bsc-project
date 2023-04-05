@@ -33,7 +33,7 @@ mars_a = AU * 1.5
 mars_hill_sphere = mars_a * (mars_mass/(3*sun_mass))**(1/3)
 
 jupiter_radius = 69911
-jupiter_mass = float(1.89813 *10**27)
+jupiter_mass = 1.89813 *10**27
 jupiter_a = AU * 5.2
 jupiter_hill_sphere = jupiter_a * (jupiter_mass/(3*sun_mass))**(1/3)
 
