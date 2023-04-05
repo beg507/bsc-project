@@ -35,7 +35,7 @@ statei_pluto      = [eph.x_pos_pluto, eph.y_pos_pluto, eph.x_vel_pluto, eph.y_ve
 
 # time and steps
 tspan       = 60 * 60 * 24 * 365 *10        # seconds, currently 10y
-dt          = 3000                        # seconds
+dt          = 300                        # seconds
 steps       = int( tspan / dt )
 ets         = np.zeros( ( steps, 1 ) )
 

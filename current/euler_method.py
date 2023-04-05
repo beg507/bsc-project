@@ -9,13 +9,15 @@ from functions import ship_orbit
 
 
 # dt = time step, t_max is simulation duration
-dt = 300  # seconds
-t_max = 10 * 365 * 24 * 3600  # 10 years in seconds
+dt_sun = 10  # seconds
+dt_jupiter = 0.1 # seconds
+t_max = (9 * 365 * 24 * 3600) + (5*31*24*60*60) + (24*24*60*60)  # 10 years in seconds
 
-# initialize arrays to store positions
-t_array = np.arange(0, t_max, dt) # array from 0 to t_max with steps of dt (start, stop, step)
+
+t_array = np.arange(0, t_max, dt_jupiter) # array from 0 to t_max with steps of dt (start, stop, step)
 n_steps = len(t_array) # length of the t_array is the number of steps
 
+# initialize arrays to store positions and velocities
 x_ship_array = np.zeros(n_steps)
 y_ship_array = np.zeros(n_steps)
 x_ship_array[0] = eph.x_pos_ship
@@ -57,6 +59,7 @@ vx_pluto_array[0] = eph.x_vel_pluto
 vy_pluto_array[0] = eph.y_vel_pluto
 
 ship_jup_dist = [] # monitoring distance between ship and jupiter
+ship_pluto_dist = [] # monitoring distance between ship and pluto
 
 # over the simulation duration (should be around 10 years for new horizons)
 # hover over functions to view their inputs
@@ -64,25 +67,31 @@ for step in range(1, n_steps):
     
     # calculate new position and velocity of earth using euler_method function
     x_earth_array[step], y_earth_array[step], vx_earth_array[step], vy_earth_array[step] = euler_method(
-        x_earth_array[step-1], y_earth_array[step-1], vx_earth_array[step-1], vy_earth_array[step-1], dt, body_data.sun_mass, body_data.G_km)
+        x_earth_array[step-1], y_earth_array[step-1], vx_earth_array[step-1], vy_earth_array[step-1], dt_sun, body_data.sun_mass, body_data.G_km)
 
     # calculate new position and velocity of jupiter using euler_method function
     x_jupiter_array[step], y_jupiter_array[step], vx_jupiter_array[step], vy_jupiter_array[step] = euler_method(
-        x_jupiter_array[step-1], y_jupiter_array[step-1], vx_jupiter_array[step-1], vy_jupiter_array[step-1], dt, body_data.sun_mass, body_data.G_km)
+        x_jupiter_array[step-1], y_jupiter_array[step-1], vx_jupiter_array[step-1], vy_jupiter_array[step-1], dt_sun, body_data.sun_mass, body_data.G_km)
 
     # calculate new position and velocity of pluto using euler_method function
     x_pluto_array[step], y_pluto_array[step], vx_pluto_array[step], vy_pluto_array[step] = euler_method(
-        x_pluto_array[step-1], y_pluto_array[step-1], vx_pluto_array[step-1], vy_pluto_array[step-1], dt, body_data.sun_mass, body_data.G_km)
+        x_pluto_array[step-1], y_pluto_array[step-1], vx_pluto_array[step-1], vy_pluto_array[step-1], dt_sun, body_data.sun_mass, body_data.G_km)
     
     # calculate new position and velocity of ship using ship_orbit function
     x_ship_array[step], y_ship_array[step], vx_ship_array[step], vy_ship_array[step] = ship_orbit(
-        x_ship_array[step-1], y_ship_array[step-1], vx_ship_array[step-1], vy_ship_array[step-1], dt, body_data.sun_mass,
+        x_ship_array[step-1], y_ship_array[step-1], vx_ship_array[step-1], vy_ship_array[step-1], dt_sun, dt_jupiter, body_data.sun_mass,
         body_data.jupiter_mass, body_data.G_km, body_data.jupiter_hill_sphere, x_jupiter_array[step-1], y_jupiter_array[step-1])
     
-    ship_jup_dist.append(((x_ship_array[step] - x_jupiter_array[step])**2 + (y_ship_array[step] - y_jupiter_array[step])**2)**0.5)
+    #ship_jup_dist.append(((x_ship_array[step] - x_jupiter_array[step])**2 + (y_ship_array[step] - y_jupiter_array[step])**2)**0.5)
+
+    #ship_pluto_dist.append(((x_ship_array[step] - x_pluto_array[step])**2 + (y_ship_array[step] - y_pluto_array[step])**2)**0.5)
+    
 
 
-np.savetxt("ship_jup_dist.txt", ship_jup_dist)
+#np.savetxt("ship_jup_dist.txt", ship_jup_dist)
+#np.savetxt("ship_pluto_dist.txt", ship_pluto_dist)
+#closest_approach_pluto = min(ship_pluto_dist)
+#print(closest_approach_pluto)
 
 #plot the orbits
 plt.style.use( 'dark_background' )

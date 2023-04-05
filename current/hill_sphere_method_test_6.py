@@ -34,7 +34,7 @@ statei_jupiter      = [eph.x_pos_jupiter, eph.y_pos_jupiter, eph.x_vel_jupiter, 
 statei_pluto      = [eph.x_pos_pluto, eph.y_pos_pluto, eph.x_vel_pluto, eph.y_vel_pluto ]
 
 # time and steps
-tspan       = 60 * 60 * 24 * 365 *10        # seconds, currently 10y
+tspan       = 60 * 60 * 24 * 365 *30        # seconds, currently 10y
 dt          = 3000                        # seconds
 steps       = int( tspan / dt )
 ets         = np.zeros( ( steps, 1 ) )
@@ -107,40 +107,32 @@ for step in range( steps - 1 ):
         #JAT VELOCITY
         jat_jupiter_vx = states_jupiter[last_step, 2]
         jat_jupiter_vy = states_jupiter[last_step, 3]
-
         jat_ship_vx = states_ship[last_step,2]
         jat_ship_vy = states_ship[last_step,3]
-
         jat_hyp_ex_vx_ship = jat_ship_vx - jat_jupiter_vx
         jat_hyp_ex_vy_ship = jat_ship_vy - jat_jupiter_vy
         ###
 
-        #states_jat[last_step] = [ship_to_jupiter_jat_x, ship_to_jupiter_jat_y, last_row[2], last_row[3]]
+        states_jat[last_step] = [ship_to_jupiter_jat_x, ship_to_jupiter_jat_y, jat_hyp_ex_vx_ship, jat_hyp_ex_vy_ship]
         
-        #states_jat[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_jat[ step ], dt )
+        states_jat[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_jat[ step ], dt )
         print(step)
-
-        states_ship[step+1] = states_ship[step+1] - states_jupiter[step]
-
-        states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_ship[ step ], dt )
         
-        states_ship[step+1] = states_ship[step+1] + states_jupiter[step]
-
-
-        #states_ship[step+1, 2] = states_jat[step+1, 2] 
-        #states_ship[step+1, 3] = states_jat[step+1, 3]
+        states_ship[step+1, 0] = states_jat[step+1, 0] + states_jupiter[step,0]
+        states_ship[step+1, 1] = states_jat[step+1, 1] + states_jupiter[step,1]
+        states_ship[step+1, 2] = states_jat[step+1, 2] 
+        states_ship[step+1, 3] = states_jat[step+1, 3]
 
         print("flag 3:", inside_hill_sphere_jupiter)
 
         ship_pos_leave = states_ship[step + 1, :2]
         jat_dist_leave = abs(np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_leave))
-
         closest_approach_array.append(jat_dist_leave)
 
         if jat_dist_leave < body_data.jupiter_radius:
             print("crashed into jupiter")
             np.savetxt("closest_appraoch_array.txt", closest_approach_array)
-            
+           #    break
         
         if abs(jat_dist_leave) > 0 and abs(jat_dist_leave) > body_data.jupiter_hill_sphere:
             
@@ -171,11 +163,11 @@ for step in range( steps - 1 ):
             jdt_ship_vx = jdt_hyp_ex_vx_ship + jdt_jupiter_vx
             jdt_ship_vy = jdt_hyp_ex_vy_ship + jdt_jupiter_vy
             
-            #print(states_ship[step])
+            print(states_ship[step])
             #replace velocities of ship at step with velocities leaving jupiter hill sphere
-            #states_ship[step+1, 2] =  jdt_ship_vx
-            #states_ship[step+1, 3] =  jdt_ship_vy
-            #print(states_ship[step])
+            states_ship[step+1, 2] =  jdt_ship_vx
+            states_ship[step+1, 3] =  jdt_ship_vy
+            print(states_ship[step])
             
             #print velcoity jat 
             print("x velcoity jat: ", last_row[2], "and y velcoity jat: ", last_row[3])
@@ -188,11 +180,8 @@ for step in range( steps - 1 ):
             print("jdt velocity: ", jdt_velocity)
 
             print("velocity increase due to gravity assist: ", jdt_velocity-jat_velocity)
-
             inside_hill_sphere_jupiter = False
-
             print("flag 3.5:", inside_hill_sphere_jupiter)
-
 
 
            
