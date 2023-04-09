@@ -28,7 +28,7 @@ def runge_kutta_4_step( f, t, y, h ): # f=function, t= simulation time, y= curre
 	return y + h / 6.0 * ( k1 + 2 * k2 + 2 * k3 + k4 ) # prediction of new state at the next step (position and velocity)
 
 # initial states
-statei_ship      = [eph.x_pos_ship, eph.y_pos_ship, eph.x_vel_ship, eph.y_vel_ship ]
+statei_ship      = [eph.x_pos_ship, eph.y_pos_ship, eph.x_vel_ship-0.2, eph.y_vel_ship-0.6 ]
 statei_earth      = [eph.x_pos_earth, eph.y_pos_earth, eph.x_vel_earth, eph.y_vel_earth ]  # starting state vector (rx, ry, vx, vy)
 statei_jupiter      = [eph.x_pos_jupiter, eph.y_pos_jupiter, eph.x_vel_jupiter, eph.y_vel_jupiter]
 statei_pluto      = [eph.x_pos_pluto, eph.y_pos_pluto, eph.x_vel_pluto, eph.y_vel_pluto ]
@@ -68,12 +68,12 @@ for step in range( steps - 1 ):
     
     jupiter_pos = states_jupiter[step + 1, :2]
 
-    print("flag 1:", inside_hill_sphere_jupiter)
+    #print("flag 1:", inside_hill_sphere_jupiter)
     if inside_hill_sphere_jupiter == False:
-        print("flag 1.5:", inside_hill_sphere_jupiter)
+        #print("flag 1.5:", inside_hill_sphere_jupiter)
         states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_ship[ step ], dt )
         
-        print("flag 2:", inside_hill_sphere_jupiter)
+        #print("flag 2:", inside_hill_sphere_jupiter)
         #print( "ship_pos vs jdt_dist", np.linalg.norm(ship_pos), jdt_dist)
 
         ship_pos_approach = states_ship[step + 1, :2]
@@ -83,14 +83,14 @@ for step in range( steps - 1 ):
     if abs(jat_dist) < abs(body_data.jupiter_hill_sphere):
         inside_hill_sphere_jupiter = True
         states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_ship[ step ], dt )
-        print("flag 3:", inside_hill_sphere_jupiter)
+        #print("flag 3:", inside_hill_sphere_jupiter)
 
         ship_pos_leave = states_ship[step + 1, :2]
         jat_dist_leave = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_leave)
 
         if abs(jat_dist_leave) > 0 and abs(jat_dist_leave) > body_data.jupiter_hill_sphere:
             inside_hill_sphere_jupiter = False
-            print("flag 3.5:", inside_hill_sphere_jupiter)
+            #print("flag 3.5:", inside_hill_sphere_jupiter)
 
         # print("Ship has entered Jupiter's Hill Sphere at step", step, "and distance to Jupiter is", dist, "km")
         # print("Inside hill sphere Jupiter is", inside_hill_sphere_jupiter)

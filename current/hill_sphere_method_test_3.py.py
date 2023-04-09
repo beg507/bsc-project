@@ -65,8 +65,6 @@ for step in range( steps - 1 ):
     states_earth[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_earth[ step ], dt )
     states_jupiter[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_jupiter[ step ], dt )
     states_pluto[ step + 1 ] = runge_kutta_4_step(two_body_ode, ets[ step ], states_pluto[ step ], dt )
-    
-    jupiter_pos = states_jupiter[step + 1, :2]
 
     print("flag 1:", inside_hill_sphere_jupiter)
     if inside_hill_sphere_jupiter == False:
@@ -76,21 +74,24 @@ for step in range( steps - 1 ):
         print("flag 2:", inside_hill_sphere_jupiter)
         #print( "ship_pos vs jdt_dist", np.linalg.norm(ship_pos), jdt_dist)
 
-        ship_pos_approach = states_ship[step + 1, :2]
-        
-        jat_dist = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_approach) # distance between jupiter and ship at jupiter arrival time
+        ship_pos = states_ship[step + 1, :2]
+        jupiter_pos = states_jupiter[step + 1, :2]
+        jat_dist = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos) # distance between jupiter and ship at jupiter arrival time
+        jdt_dist = np.linalg.norm(jupiter_pos) + body_data.jupiter_hill_sphere # distance between far edge of hill sphere and sun at jupiter departure time
+
 
     if abs(jat_dist) < abs(body_data.jupiter_hill_sphere):
         inside_hill_sphere_jupiter = True
         states_ship[ step + 1 ] = runge_kutta_4_step(two_body_ode_jupiter, ets[ step ], states_ship[ step ], dt )
-        print("flag 3:", inside_hill_sphere_jupiter, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print("flag 3:", inside_hill_sphere_jupiter)
+        
+                #print("states_ship: ", states_ship [enter_step])
 
-        ship_pos_leave = states_ship[step + 1, :2]
-        jat_dist_leave = np.linalg.norm(jupiter_pos) - np.linalg.norm(ship_pos_leave)
-
-        if abs(jat_dist_leave) > 0 and abs(jat_dist_leave) > body_data.jupiter_hill_sphere:
-            inside_hill_sphere_jupiter = False
+    if abs(jdt_dist) < abs(np.linalg.norm(ship_pos)):
             print("flag 3.5:", inside_hill_sphere_jupiter)
+            inside_hill_sphere_jupiter = False
+    print("flag 4: ",inside_hill_sphere_jupiter)  
+
 
         # print("Ship has entered Jupiter's Hill Sphere at step", step, "and distance to Jupiter is", dist, "km")
         # print("Inside hill sphere Jupiter is", inside_hill_sphere_jupiter)

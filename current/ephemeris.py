@@ -23,13 +23,9 @@
 # 20th
 import math
 
+# positions (km)
 x_pos_ship = -7.507461520578283E+07
 y_pos_ship = 1.266524115246643E+08
-x_vel_ship = -3.700080476789000E+01
-y_vel_ship = -2.156449885619415E+01
-
-velcoity_ship = math.sqrt(x_vel_ship**2 + y_vel_ship**2)
-
 x_pos_earth = -7.415204336670166E+07
 y_pos_earth = 1.271862861922115E+08
 x_pos_jupiter = -6.574284891231705E+08
@@ -45,3 +41,5 @@ x_vel_jupiter = 7.516264625282970E+00
 y_vel_jupiter = -9.954955481838631E+00
 x_vel_pluto = 5.506901416993162E+00
 y_vel_pluto = -1.528136276855324E+00
+x_vel_ship = -3.700080476789000E+01
+y_vel_ship = -2.156449885619415E+01

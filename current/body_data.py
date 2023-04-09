@@ -1,6 +1,6 @@
 import scipy
 from scipy import constants
-G_km = float(constants.G * 10**-9) # km**3/ kg / s**2
+G_km = 6.67408e-20  # km^3/(kg*s^2)
 
 # SOI eqn 12-2 in textbook
 # r_SOI = (m_planet/m_sun)**(2/5) * a_planet
@@ -35,10 +35,8 @@ mars_hill_sphere = mars_a * (mars_mass/(3*sun_mass))**(1/3)
 jupiter_radius = 69911
 jupiter_mass = 1.89813 *10**27
 jupiter_a = AU * 5.2
-jupiter_hill_sphere = jupiter_a * (jupiter_mass/(3*sun_mass))**(1/3)
-jupiter_soi = ((jupiter_mass/sun_mass)**(2/5)) * jupiter_a
-print(jupiter_hill_sphere)
-print(jupiter_soi)
+jupiter_hill_sphere = jupiter_a * (jupiter_mass/(3*sun_mass))**(1/3) #53103671.70493758
+jupiter_soi = ((jupiter_mass/sun_mass)**(2/5)) * jupiter_a #48173944.836597234
 
 
 saturn_radius = 58232

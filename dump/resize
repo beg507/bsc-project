@@ -27,6 +27,7 @@ while run:
                 run = False
     # Test line to see if the window resizing works properly
     pygame.draw.line(screen, (255, 255, 255), (int(0.3*s_width), int(0.25*s_height)), (int(0.8*s_width), int(0.25*s_height)))
+    
     # Final flip
     #pygame.display.flip()
     pygame.display.update()

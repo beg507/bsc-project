@@ -34,7 +34,7 @@ statei_jupiter      = [eph.x_pos_jupiter, eph.y_pos_jupiter, eph.x_vel_jupiter, 
 statei_pluto      = [eph.x_pos_pluto, eph.y_pos_pluto, eph.x_vel_pluto, eph.y_vel_pluto ]
 
 # time and steps
-tspan       = 60 * 60 * 24 * 365 *30        # seconds, currently 10y
+tspan       = 60 * 60 * 24 * 365 *10        # seconds, currently 10y
 dt          = 3000                        # seconds
 steps       = int( tspan / dt )
 ets         = np.zeros( ( steps, 1 ) )
