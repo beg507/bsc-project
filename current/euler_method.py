@@ -94,7 +94,8 @@ for step in range(1, n_steps):
     # calculate new position and velocity of ship using ship_orbit function
     x_ship_array[step], y_ship_array[step], vx_ship_array[step], vy_ship_array[step], dt = ship_orbit(
         x_ship_array[step-1], y_ship_array[step-1], vx_ship_array[step-1], vy_ship_array[step-1], dt, body_data.sun_mass,
-        body_data.jupiter_mass, body_data.G_km, body_data.jupiter_hill_sphere, x_jupiter_array[step-1], y_jupiter_array[step-1])
+        body_data.jupiter_mass, body_data.G_km, body_data.jupiter_hill_sphere, x_jupiter_array[step-1], y_jupiter_array[step-1], 
+         x_pluto_array[step-1], y_pluto_array[step-1])
     
     x_ship_array_n[step], y_ship_array_n[step], vx_ship_array_n[step], vy_ship_array_n[step] = euler_method(
         x_ship_array_n[step-1], y_ship_array_n[step-1], vx_ship_array_n[step-1], vy_ship_array_n[step-1], dt, body_data.sun_mass, body_data.G_km)

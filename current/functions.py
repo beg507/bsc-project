@@ -18,10 +18,11 @@ flags = [] # using to monitor which loops the code goes into
 
 tolerance = 0.1
 
-def ship_orbit(x, y, vx, vy, dt, m_sun, m_jupiter, G, r_hill_jupiter, x_j, y_j):
+def ship_orbit(x, y, vx, vy, dt, m_sun, m_jupiter, G, r_hill_jupiter, x_j, y_j, x_p, y_p):
     # calculate distance between ship and sun, and ship and jupiter
     r_sun = ((x ** 2) + (y ** 2)) ** 0.5
     r_jupiter = ((x - x_j) ** 2 + (y - y_j) ** 2) ** 0.5
+    r_pluto = ((x - x_p) ** 2 + (y - y_p) ** 2) ** 0.5
 
     if r_jupiter < r_hill_jupiter:
 
