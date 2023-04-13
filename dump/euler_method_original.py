@@ -79,22 +79,23 @@ ship_jup_dist = [] # monitoring distance between ship and jupiter
 # hover over functions to view their inputs
 for step in range(1, n_steps):
     
-    # calculate new position and velocity of earth using euler_method function
+    # calculating the new position and velocities of the planets using the euler function, and the ship using the ship orbit function
+    
+    # PLANETS IN ORDER
+    
     x_earth_array[step], y_earth_array[step], vx_earth_array[step], vy_earth_array[step] = euler_method(
         x_earth_array[step-1], y_earth_array[step-1], vx_earth_array[step-1], vy_earth_array[step-1], dt, body_data.sun_mass, body_data.G_km)
 
-    # calculate new position and velocity of jupiter using euler_method function
     x_jupiter_array[step], y_jupiter_array[step], vx_jupiter_array[step], vy_jupiter_array[step] = euler_method(
         x_jupiter_array[step-1], y_jupiter_array[step-1], vx_jupiter_array[step-1], vy_jupiter_array[step-1], dt, body_data.sun_mass, body_data.G_km)
 
-    # calculate new position and velocity of pluto using euler_method function
     x_pluto_array[step], y_pluto_array[step], vx_pluto_array[step], vy_pluto_array[step] = euler_method(
         x_pluto_array[step-1], y_pluto_array[step-1], vx_pluto_array[step-1], vy_pluto_array[step-1], dt, body_data.sun_mass, body_data.G_km)
     
-    # calculate new position and velocity of ship using ship_orbit function
     x_ship_array[step], y_ship_array[step], vx_ship_array[step], vy_ship_array[step], dt = ship_orbit(
         x_ship_array[step-1], y_ship_array[step-1], vx_ship_array[step-1], vy_ship_array[step-1], dt, body_data.sun_mass,
-        body_data.jupiter_mass, body_data.G_km, body_data.jupiter_hill_sphere, x_jupiter_array[step-1], y_jupiter_array[step-1], 
+        body_data.jupiter_mass, body_data.pluto_mass, body_data.G_km, body_data.jupiter_hill_sphere, body_data.pluto_hill_sphere,
+        x_jupiter_array[step-1], y_jupiter_array[step-1], 
          x_pluto_array[step-1], y_pluto_array[step-1])
     
     x_ship_array_n[step], y_ship_array_n[step], vx_ship_array_n[step], vy_ship_array_n[step] = euler_method(
@@ -126,6 +127,13 @@ plt.plot(x_ship_array, y_ship_array, color='white', label='Ship')
 plt.plot(x_ship_array_n, y_ship_array_n, color='yellow', label='Ship (no jupiter)')
 
 plt.plot(x_positions, y_positions, color='green', label='New Horizons Data')
+
+graph.spines.left.set_position('zero')
+graph.spines.right.set_color('none')
+graph.spines.bottom.set_position('zero')
+graph.spines.top.set_color('none')
+graph.xaxis.set_ticks_position('bottom')
+graph.yaxis.set_ticks_position('left')
 
 graph.set_xlim([-40*149597870.691, 40*149597870.691]) # set to 40AU to see whole solar system up to pluto
 graph.set_ylim([-40*149597870.691, 40*149597870.691])

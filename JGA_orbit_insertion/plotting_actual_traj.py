@@ -6,6 +6,9 @@ vx_velocities = []
 vy_velocities = []
 days = []
 
+AU = 149597870.691 #km
+
+
 # open the text file and read the lines
 with open('horizons_results.txt', 'r') as file:
     lines = file.readlines()
@@ -30,8 +33,8 @@ for line in lines:
     vy = float(data[5])
     
     days.append(day)
-    x_positions.append(x)
-    y_positions.append(y)
+    x_positions.append(x/AU)
+    y_positions.append(y/AU)
     vx_velocities.append(vx)
     vy_velocities.append(vy)
 
