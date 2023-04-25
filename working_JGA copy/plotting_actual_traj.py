@@ -41,5 +41,5 @@ for line in lines:
 # Plot the trajectory
 #plt.plot(x_positions, y_positions)
 #plt.xlabel('X position')
-##plt.ylabel('Y position')
+#plt.ylabel('Y position')
 #plt.show()

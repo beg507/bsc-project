@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 import ephemeris as eph
 import body_data
@@ -20,8 +21,11 @@ ship_velocity_array = []
 jupiter_closest_approach_array = []
 ship_pluto_dist = [] # monitoring distance between ship and pluto
 pluto_closest_approach_array = []
-jupiter_hill_sphere_step = []
 
+jupiter_hill_sphere_step = []
+pluto_hill_sphere_step = []
+
+enter_pluto_hill_sphere = False
 # over the simulation duration (should be around 10 years for new horizons)
 # hover over functions to view their inputs
 for step in range(1, n_steps):
@@ -31,28 +35,20 @@ for step in range(1, n_steps):
     # PLANETS IN ORDER
     x_mercury_array[step], y_mercury_array[step], vx_mercury_array[step], vy_mercury_array[step] = euler_method(
         x_mercury_array[step-1], y_mercury_array[step-1], vx_mercury_array[step-1], vy_mercury_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-    
     x_venus_array[step], y_venus_array[step], vx_venus_array[step], vy_venus_array[step] = euler_method(
         x_venus_array[step-1], y_venus_array[step-1], vx_venus_array[step-1], vy_venus_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-    
     x_earth_array[step], y_earth_array[step], vx_earth_array[step], vy_earth_array[step] = euler_method(
         x_earth_array[step-1], y_earth_array[step-1], vx_earth_array[step-1], vy_earth_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-
     x_mars_array[step], y_mars_array[step], vx_mars_array[step], vy_mars_array[step] = euler_method(
-        x_mars_array[step-1], y_mars_array[step-1], vx_mars_array[step-1], vy_mars_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-    
+        x_mars_array[step-1], y_mars_array[step-1], vx_mars_array[step-1], vy_mars_array[step-1], dt, body_data.sun_mass, body_data.G_km) 
     x_jupiter_array[step], y_jupiter_array[step], vx_jupiter_array[step], vy_jupiter_array[step] = euler_method(
-        x_jupiter_array[step-1], y_jupiter_array[step-1], vx_jupiter_array[step-1], vy_jupiter_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-    
+        x_jupiter_array[step-1], y_jupiter_array[step-1], vx_jupiter_array[step-1], vy_jupiter_array[step-1], dt, body_data.sun_mass, body_data.G_km)    
     x_saturn_array[step], y_saturn_array[step], vx_saturn_array[step], vy_saturn_array[step] = euler_method(
-        x_saturn_array[step-1], y_saturn_array[step-1], vx_saturn_array[step-1], vy_saturn_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-    
+        x_saturn_array[step-1], y_saturn_array[step-1], vx_saturn_array[step-1], vy_saturn_array[step-1], dt, body_data.sun_mass, body_data.G_km)   
     x_uranus_array[step], y_uranus_array[step], vx_uranus_array[step], vy_uranus_array[step] = euler_method(
         x_uranus_array[step-1], y_uranus_array[step-1], vx_uranus_array[step-1], vy_uranus_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-
     x_neptune_array[step], y_neptune_array[step], vx_neptune_array[step], vy_neptune_array[step] = euler_method(
         x_neptune_array[step-1], y_neptune_array[step-1], vx_neptune_array[step-1], vy_neptune_array[step-1], dt, body_data.sun_mass, body_data.G_km)
-
     x_pluto_array[step], y_pluto_array[step], vx_pluto_array[step], vy_pluto_array[step] = euler_method(
         x_pluto_array[step-1], y_pluto_array[step-1], vx_pluto_array[step-1], vy_pluto_array[step-1], dt, body_data.sun_mass, body_data.G_km)
     
@@ -71,6 +67,37 @@ for step in range(1, n_steps):
     # SHIP VELOCITY AT EACH STEP (JGA)
     ship_velocity_array.append((((vx_ship_array[step])**2) + ((vy_ship_array[step])**2))**0.5)
 
+    if t_array[step] == course_correction_sec: 
+        print("COURSE CORRECTION ONE")
+        # -0.053 and 0.17 are pretty good
+        vx_ship_array[step] += -0.053
+        vy_ship_array[step] += 0.1705
+    
+
+    if t_array[step] == course_correction_2_sec: 
+        print("COURSE CORRECTION TWO")
+        #vx_ship_array += 2
+        vy_ship_array[step] += -2
+
+
+    if t_array[step] == 268491000: # closest approach time
+        print("COURSE CORRECTION THREE")
+        a = vx_ship_array[step]
+        b = vy_ship_array[step]
+        #vx_ship_array[step] *= 0.02529551834068018
+        #vy_ship_array[step] *= 0.02529551834068018
+        vx_ship_array[step] *= 0.075
+        vy_ship_array[step] *= 0.075
+        c = vx_ship_array[step]
+        d = vy_ship_array[step]
+        #a=vx_ship_array[step]
+        #b=vy_ship_array[step]
+        #c=np.sqrt(vx_ship_array[step]**2+vy_ship_array[step]**2)
+
+
+
+
+
     # this small section checks the distance between the ship and jupiter to make sure the ship does not enter jupiter's atmosphere
     ship_jup_dist = (((x_ship_array[step] - x_jupiter_array[step])**2 + (y_ship_array[step] - y_jupiter_array[step])**2)**0.5)
     jupiter_closest_approach_array.append([ship_jup_dist, step])
@@ -86,22 +113,28 @@ for step in range(1, n_steps):
     pluto_closest_approach_array.append([ship_pluto_dist, step])
     if ship_pluto_dist < body_data.pluto_radius:
         print("Crashed into Pluto")
-        break
+        #break
+    if ship_pluto_dist < body_data.pluto_hill_sphere:
+        enter_pluto_hill_sphere = True
+        pluto_hill_sphere_step.append(step)
 
-    #ship_pluto_dist.append(((x_ship_array[step] - x_pluto_array[step])**2 + (y_ship_array[step] - y_pluto_array[step])**2)**0.5)
+np.savetxt("vx_ship_array.txt", vx_ship_array)
+np.savetxt("vy_ship_array.txt", vy_ship_array)
     
+np.savetxt("pluto_closest_approach_array.txt", pluto_closest_approach_array)
+
 #   JUPITER CLOSEST APPROACH
     # finding minimum value in closest approach array
-jupiter_closest_approach_r = jupiter_closest_approach_array[0][0] # assume the first element has the minimum x value
+jupiter_closest_approach_r = jupiter_closest_approach_array[0][0] # assume the first element has the minimum r value
 for i in range(1, len(jupiter_closest_approach_array)): # iterate over the remaining elements
-    if jupiter_closest_approach_array[i][0] < jupiter_closest_approach_r: # compare x value with current minimum
-        jupiter_closest_approach_r = jupiter_closest_approach_array[i][0] # update minimum x value
+    if jupiter_closest_approach_array[i][0] < jupiter_closest_approach_r: # compare r value with current minimum
+        jupiter_closest_approach_r = jupiter_closest_approach_array[i][0] # update minimum r value
+    
     # finding corresponding y value (the step)
 for i in jupiter_closest_approach_array:
     if i[0] == jupiter_closest_approach_r:
         jupiter_closest_approach_t = i[1] # this is the STEP not the seconds
         break
-
 
 print("----------ENTER JUPITER HILL SPHERE----------")
 print("Ship entered Jupiter's hill sphere at step:", jupiter_hill_sphere_step[0])
@@ -140,10 +173,22 @@ for i in range(1, len(pluto_closest_approach_array)): # iterate over the remaini
     if pluto_closest_approach_array[i][0] < pluto_closest_approach_r: # compare x value with current minimum
         pluto_closest_approach_r = pluto_closest_approach_array[i][0] # update minimum x value
     # finding corresponding y value (the step)
+
 for i in pluto_closest_approach_array:
     if i[0] == pluto_closest_approach_r:
         pluto_closest_approach_t = i[1] # this is the STEP not the seconds
         break
+
+if enter_pluto_hill_sphere == True:
+    print("----------ENTER PLUTO HILL SPHERE----------")
+    print("Ship entered Pluto's hill sphere at step:", pluto_hill_sphere_step[0])
+    print("Ship entered Pluto's hill sphere at time (s):", t_array[pluto_hill_sphere_step[0]])
+    #print("Ship entered Pluto's hill sphere on:", enter_pluto_hill_sphere_date.strftime('%Y-%m-%d %H:%M:%S'))
+    print("Ship entered Pluto's hill sphere at x (km):", x_ship_array[pluto_hill_sphere_step[0]])
+    print("Ship entered Pluto's hill sphere at y (km):", y_ship_array[pluto_hill_sphere_step[0]])
+    print("Ship entered Pluto's hill sphere at vx (km/s):", vx_ship_array[pluto_hill_sphere_step[0]])
+    print("Ship entered Pluto's hill sphere at vy (km/s):", vy_ship_array[pluto_hill_sphere_step[0]])
+    print("Ship entered Pluto's hill sphere at v (km/s):", ((((vx_ship_array[pluto_hill_sphere_step[0]])**2) + ((vy_ship_array[pluto_hill_sphere_step[0]])**2))**0.5))
 
 print("----------PLUTO CLOSEST APPROACH----------")
 print("Pluto closest approach r (km):", pluto_closest_approach_r) 
@@ -155,11 +200,25 @@ print("Pluto closest approach vy (km/s):", vy_ship_array[pluto_closest_approach_
 print("Pluto closest approach v (km/s):", ((((vx_ship_array[pluto_closest_approach_t])**2) + ((vy_ship_array[pluto_closest_approach_t])**2))**0.5))
 print("Pluto closest appraoch date:", pluto_closest_approach_date.strftime('%Y-%m-%d %H:%M:%S'))
 
+if enter_pluto_hill_sphere == True:
 
+    print("----------EXIT PLUTO HILL SPHERE----------")
+    print("Ship exited Pluto's hill sphere at step:", pluto_hill_sphere_step[-1])
+    print("Ship exited Pluto's hill sphere at time (s):", t_array[pluto_hill_sphere_step[-1]])
+    #print("Ship exited Pluto's hill sphere on:", exit_pluto_hill_sphere_date.strftime('%Y-%m-%d %H:%M:%S'))
+    print("Ship exited Pluto's hill sphere at x (km):", x_ship_array[pluto_hill_sphere_step[-1]])
+    print("Ship exited Pluto's hill sphere at y (km):", y_ship_array[pluto_hill_sphere_step[-1]])
+    print("Ship exited Pluto's hill sphere at vx (km/s):", vx_ship_array[pluto_hill_sphere_step[-1]])
+    print("Ship exited Pluto's hill sphere at vy (km/s):", vy_ship_array[pluto_hill_sphere_step[-1]])
+    print("Ship exited Pluto's hill sphere at v (km/s):", ((((vx_ship_array[pluto_hill_sphere_step[-1]])**2) + ((vy_ship_array[pluto_hill_sphere_step[-1]])**2))**0.5))
+    print("Velocity increase (km/s) due to PGA:", ((((vx_ship_array[pluto_hill_sphere_step[-1]])**2) + ((vy_ship_array[pluto_hill_sphere_step[-1]])**2))**0.5) - ((((vx_ship_array[pluto_hill_sphere_step[0]])**2) + ((vy_ship_array[pluto_hill_sphere_step[0]])**2))**0.5))
 
+print(a, b, c, d)
 #plot the orbits
 #plt.style.use( 'dark_background' )
+
 fig, graph = plt.subplots()
+
 
 # planets
 plt.plot(x_mercury_array/AU, y_mercury_array/AU, color='brown', label='Mercury')
@@ -176,6 +235,7 @@ plt.plot(x_pluto_array/AU, y_pluto_array/AU, color='khaki', label='Pluto')
 plt.plot(x_ship_array/AU, y_ship_array/AU, color='black',  label='Ship (JGA)')
 plt.plot(x_ship_array_n/AU, y_ship_array_n/AU, color='grey', label='Ship (NO JGA)')
 plt.plot(x_positions, y_positions, color='green', label='New Horizons Data')
+
 
 # centering
 graph.spines.left.set_position('zero')
@@ -206,10 +266,10 @@ plt.show()
 #plt.plot(vx_ship_array, vy_ship_array, color='white',  label='Ship (JGA)')
 #plt.show()
 
-#new_horizons_velocity_array = []
-#t_array = t_array[:-1]
-#y_array = t_array/31536000
-#plt.plot(y_array, ship_velocity_array, color='black',  label='Ship (JGA)')
-#plt.xlabel('Time (Years)')
-#plt.ylabel('Velocity (km/s)') 
-#plt.show()
+new_horizons_velocity_array = []
+t_array = t_array[:-1]
+y_array = t_array/31536000 # in years
+plt.plot(y_array, ship_velocity_array, color='black',  label='Ship (JGA)')
+plt.xlabel('Time (Years)')
+plt.ylabel('Velocity (km/s)') 
+plt.show()

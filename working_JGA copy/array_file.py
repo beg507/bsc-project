@@ -3,7 +3,9 @@ import ephemeris as eph
 
 # dt = time step, t_max is simulation duration
 dt = 200  # seconds
-t_max = (9 * 365 * 24 * 3600) + (5*31*24*60*60) + (24*24*60*60)  # 9y 5m 25d
+#t_max = (9 * 365 * 24 * 3600) + (5*31*24*60*60) + (24*24*60*60)  # 9y 5m 25d
+t_max = (12 * 365 * 24 * 3600)  # 12y
+#t_max = 268481400
 
 
 t_array = np.arange(0, t_max, dt) # array from 0 to t_max with steps of dt (start, stop, step)
@@ -20,7 +22,7 @@ vx_ship_array = np.zeros(n_steps)
 vy_ship_array = np.zeros(n_steps)
 #-0.2 for x and -0.4 for y gives the look of the no jupiter trajectory
 ##-0.2 for x and -0.6 for y follows NH trajectory but overshoots pluto
-vx_ship_array[0] = eph.x_vel_ship-0.2 
+vx_ship_array[0] = eph.x_vel_ship-0.2
 vy_ship_array[0] = eph.y_vel_ship-0.6
 
 v_ship = (((eph.x_vel_ship-0.2)**2) +  ((eph.y_vel_ship-0.6)**2))**0.5

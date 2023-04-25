@@ -19,19 +19,10 @@ jan_30_2006_course_correction_sec = int((jan_30_2006_course_correction - start_t
 mar_9_2006_course_correction_sec = int((mar_9_2006_course_correction - start_time).total_seconds()) + (24*60*60)
 sep_25_2007_course_correction_sec = int((sep_25_2007_course_correction - start_time).total_seconds()) + (24*60*60)
 
-course_correction = datetime.datetime(2006, 11, 1)
-course_correction_sec = int((course_correction - start_time).total_seconds())
+course_correction_date = start_time + datetime.timedelta(seconds=35996200*1.5)
+#print(course_correction_date)
+course_correction_after_JGA = datetime.datetime(2007, 10, 7)
+course_correction_after_JGA_sec = int((course_correction_after_JGA - start_time).total_seconds())
 
-enter_pluto_hill_sphere_date = start_time + datetime.timedelta(seconds=272970900)
-#print(enter_pluto_hill_sphere_date)
-
-course_correction_2_date = start_time + datetime.timedelta(seconds=272985000)
-#print(course_correction_2_date)
-course_correction_2 = datetime.datetime(2013, 6, 11)
-course_correction_2_sec = int((course_correction_2 - start_time).total_seconds())
-
-course_correction_3_date = start_time + datetime.timedelta(seconds=268038199)
-#print(course_correction_3_date)
-course_correction_3 = datetime.datetime(2014, 7, 20)
-course_correction_3_sec = int((course_correction_3 - start_time).total_seconds())
-
+course_correction_pluto_hill_sphere = datetime.datetime(2010, 10, 7)
+course_correction_pluto_hill_sphere_sec = int((course_correction_pluto_hill_sphere - start_time).total_seconds())

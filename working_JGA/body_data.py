@@ -58,5 +58,5 @@ pluto_radius = 1188.3
 pluto_mass = 1.307 *10**22
 pluto_a = AU * 39.5
 pluto_hill_sphere = pluto_a * (pluto_mass/(3*sun_mass))**(1/3)
-
+#print(pluto_hill_sphere)
 #planets = [sun, mercury 0.4, venus 0.7, earth 1, mars 1.5, jupiter 5.2, saturn 9.6, uranus 19.2, neptune 30, pluto 39.5]
