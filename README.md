@@ -1,7 +1,7 @@
 # bsc-project
 
 - The wokring simulation files are found in the **"working_JGA"** folder and are the files that generated the results shown in the BSc Project Report
-    - The folder **"formatted for report"** contains these files as shown in the appendix of the BSc Report (where necessary) and removes code that was used for plotting or investigation of the main code i.e. these files are a clean version of those in **"working_JGA"**, formatted for insertion into the A4 report PDF
+    - The folder **"formatted for report"** contains these files as shown in the appendix of the BSc Report (where necessary) and removes code that was used for plotting or investigation of the main code i.e. these files are a clean version of those in **"working_JGA"**, formatted for insertion into the A4 report PDF. These files cannot be run as they contains "errors" as a result of ensuring proper text wrapping for the appendix.
 
 - The following folders are NOT needed for the simulation to run
     - **"calculations"** folder: contains files used to calculate the Hohmann transfer times from Earth to Mars and Earth to Pluto, as well as orbit insertion invesitgations and the theoretical calculations needed for the final trajectory's JGA

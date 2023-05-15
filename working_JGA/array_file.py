@@ -2,15 +2,13 @@ import numpy as np
 import ephemeris as eph
 
 # dt = time step, t_max is simulation duration
-dt = 200  # seconds
-#t_max = (9 * 365 * 24 * 3600) + (5*31*24*60*60) + (24*24*60*60)  # 9y 5m 25d
-t_max = (10 * 365 * 24 * 3600)  # 10y
-#t_max = 268491000
+dt = 100  # seconds
+t_max = (10 * 365 * 24 * 3600)  # 10 years
 
 # array from 0 to t_max with steps of dt (start, stop, step)
 t_array = np.arange(0, t_max, dt) 
 n_steps = len(t_array) # length of the t_array is the number of steps
-#print(t_array/31536000)
+
 # initialize arrays to store positions and velocities
 
 # SHIP WITH GRAVITY ASSIST
