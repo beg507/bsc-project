@@ -17,8 +17,6 @@ def euler_method(x, y, vx, vy, dt, M, G):
 flags = [] # using to monitor which loops the code goes into
 enter_jupiter_hill_sphere = []
 
-tolerance = 0.1
-
 def ship_orbit(x, y, vx, vy, dt, m_sun, m_jupiter, m_pluto, G, r_hill_jupiter, r_hill_pluto, x_j, y_j, x_p, y_p):
     # calculate distance between ship and sun, and ship and jupiter
     r_sun = ((x ** 2) + (y ** 2)) ** 0.5

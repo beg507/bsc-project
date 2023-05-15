@@ -4,11 +4,11 @@ import ephemeris as eph
 # dt = time step, t_max is simulation duration
 dt = 200  # seconds
 #t_max = (9 * 365 * 24 * 3600) + (5*31*24*60*60) + (24*24*60*60)  # 9y 5m 25d
-t_max = (12 * 365 * 24 * 3600)  # 12y
+t_max = (10 * 365 * 24 * 3600)  # 10y
 #t_max = 268491000
 
-
-t_array = np.arange(0, t_max, dt) # array from 0 to t_max with steps of dt (start, stop, step)
+# array from 0 to t_max with steps of dt (start, stop, step)
+t_array = np.arange(0, t_max, dt) 
 n_steps = len(t_array) # length of the t_array is the number of steps
 #print(t_array/31536000)
 # initialize arrays to store positions and velocities
@@ -51,12 +51,12 @@ vy_mercury_array[0] = eph.y_vel_mercury
 # VENUS
 x_venus_array = np.zeros(n_steps)
 y_venus_array = np.zeros(n_steps)
-x_venus_array[0] = eph.x_pos_earth
-y_venus_array[0] = eph.y_pos_earth
+x_venus_array[0] = eph.x_pos_venus
+y_venus_array[0] = eph.y_pos_venus
 vx_venus_array = np.zeros(n_steps)
 vy_venus_array = np.zeros(n_steps)
-vx_venus_array[0] = eph.x_vel_earth
-vy_venus_array[0] = eph.y_vel_earth
+vx_venus_array[0] = eph.x_vel_venus
+vy_venus_array[0] = eph.y_vel_venus
 
 # EARTH
 x_earth_array = np.zeros(n_steps)

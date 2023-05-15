@@ -1,17 +1,15 @@
 # NEW HORIZONS LAUNCH DATE DATA - JANUARY 19TH 2006 19:00
-# EPHEMERIS DATA - Time Specification: Start=2006-01-20 19:00 TDB , Stop=2006-01-21 19:00, Step=1 (days)
+# EPHEMERIS DATA - Time Specification: Start=2006-01-20 19:00 TDB , 
+# Stop=2006-01-21 19:00, Step=1 (days)
 
 import math
 
 # positions (km) and velocities (km/s)
-
 # ship
 x_pos_ship = -7.507461520578283E+07
 y_pos_ship = 1.266524115246643E+08
 x_vel_ship = -3.700080476789000E+01
 y_vel_ship = -2.156449885619415E+01
-vel_ship = (((x_vel_ship)**2) + ((y_vel_ship)**2))**0.5
-#print(vel_ship)
 
 # mercury
 x_pos_mercury = 2.095700502237735E+07
