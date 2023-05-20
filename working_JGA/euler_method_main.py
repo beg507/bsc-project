@@ -20,16 +20,17 @@ import date_finder
 from date_finder import *
 
 ship_jup_dist = [] # monitoring distance between ship and jupiter
-ship_velocity_array = [] 
-ship_velocity_array_n = [] 
+ship_velocity_array = [] # JGA 
+ship_velocity_array_n = [] # for the no JGA case
 jupiter_closest_approach_array = []
 ship_pluto_dist = [] # monitoring distance between ship and pluto
 pluto_closest_approach_array = []
 
+# recording steps when the ship is in the hill spheres
 jupiter_hill_sphere_step = []
 pluto_hill_sphere_step = []
 
-enter_pluto_hill_sphere = False
+
 # over the simulation duration (should be around 10 years for new horizons)
 # hover over functions to view their inputs
 for step in range(1, n_steps):
@@ -80,30 +81,20 @@ for step in range(1, n_steps):
 # FOR OUTPUT FOUR: INCLUDE ALL COURSE CORRECTIONS, ENSURE SHIP IS USING SHIP_ORBIT
     if t_array[step] == course_correction_sec: 
         print("COURSE CORRECTION ONE")
-        # -0.053 and 0.17 are pretty good
-        #v = (vx_ship_array[step]**2 + vy_ship_array[step]**2)**0.5
-        #vx_ship_array[step] += -0.053
-        #vy_ship_array[step] += 0.1705
-        #vf = (vx_ship_array[step]**2 + vy_ship_array[step]**2)**0.5
-        #print(vf-v)
-    
+        vx_ship_array[step] += -0.053
+        vy_ship_array[step] += 0.1705
 
     if t_array[step] == course_correction_2_sec: 
         print("COURSE CORRECTION TWO")
-        #vy_ship_array[step] += -2
-
+        vy_ship_array[step] += -2
 
     if t_array[step] == 268491000: # closest approach time
         print("COURSE CORRECTION THREE")
-        a = vx_ship_array[step]
-        b = vy_ship_array[step]
-        #vx_ship_array[step] *= 0.02529551834068018
-        #vy_ship_array[step] *= 0.02529551834068018
-        c = vx_ship_array[step]
-        d = vy_ship_array[step]
+        vx_ship_array[step] *= 0.02529551834068018
+        vy_ship_array[step] *= 0.02529551834068018
 
-
-    # this small section checks the distance between the ship and jupiter to make sure the ship does not enter jupiter's atmosphere
+    # checks the distance between the ship and jupiter to make sure the 
+    # ship does not enter jupiter's atmosphere
     ship_jup_dist = (((x_ship_array[step] - x_jupiter_array[step])**2 + (y_ship_array[step] - y_jupiter_array[step])**2)**0.5)
     jupiter_closest_approach_array.append([ship_jup_dist, step])
     if ship_jup_dist < body_data.jupiter_radius:
@@ -123,9 +114,9 @@ for step in range(1, n_steps):
         enter_pluto_hill_sphere = True
         pluto_hill_sphere_step.append(step)
 
+# for saving arrays for inspection
 np.savetxt("vx_ship_array.txt", vx_ship_array)
 np.savetxt("vy_ship_array.txt", vy_ship_array)
-    
 np.savetxt("pluto_closest_approach_array.txt", pluto_closest_approach_array)
 
 #   JUPITER CLOSEST APPROACH
@@ -237,22 +228,22 @@ fig.set_figwidth(15)
 #plt.rcParams["figure.figsize"] = (2560/2, 1440)
 #2560 1440
 # planets
-#plt.plot(x_mercury_array/AU, y_mercury_array/AU, color='brown', label='Mercury')
-#plt.plot(x_venus_array/AU, y_venus_array/AU, color='orange', label='Venus')
-#plt.plot(x_earth_array/AU, y_earth_array/AU, color='cyan', label='Earth')
-#plt.plot(x_mars_array/AU, y_mars_array/AU, color='red', label='Mars')
-#plt.plot(x_jupiter_array/AU, y_jupiter_array/AU, color='indianred', label='Jupiter')
-#plt.plot(x_saturn_array/AU, y_saturn_array/AU, color='brown', label='Saturn')
-#plt.plot(x_uranus_array/AU, y_uranus_array/AU, color='dodgerblue', label='Uranus')
-#plt.plot(x_neptune_array/AU, y_neptune_array/AU, color='blue', label='Neptune')
+plt.plot(x_mercury_array/AU, y_mercury_array/AU, color='brown', label='Mercury')
+plt.plot(x_venus_array/AU, y_venus_array/AU, color='orange', label='Venus')
+plt.plot(x_earth_array/AU, y_earth_array/AU, color='cyan', label='Earth')
+plt.plot(x_mars_array/AU, y_mars_array/AU, color='red', label='Mars')
+plt.plot(x_jupiter_array/AU, y_jupiter_array/AU, color='indianred', label='Jupiter')
+plt.plot(x_saturn_array/AU, y_saturn_array/AU, color='brown', label='Saturn')
+plt.plot(x_uranus_array/AU, y_uranus_array/AU, color='dodgerblue', label='Uranus')
+plt.plot(x_neptune_array/AU, y_neptune_array/AU, color='blue', label='Neptune')
 plt.plot(x_pluto_array/AU, y_pluto_array/AU, color='khaki', label='Pluto')
 
 # ships
-plt.scatter(x_ship_array/AU, y_ship_array/AU, color='black',  label='Ship (JGA)', s=1, marker='X')
+#plt.scatter(x_ship_array/AU, y_ship_array/AU, color='black',  label='Ship (JGA)', s=1, marker='X')
 plt.plot(x_ship_array/AU, y_ship_array/AU, color='black', label='Ship (JGA)')
 
 #plt.plot(x_ship_array_n/AU, y_ship_array_n/AU, color='grey', label='Ship (NO JGA)')
-#plt.plot(x_positions, y_positions, color='green', label='New Horizons Data')
+plt.plot(x_positions, y_positions, color='green', label='New Horizons Data')
 
 
 # centering
@@ -301,14 +292,14 @@ graph.set_aspect('equal', adjustable='box')
 #plt.plot(1031535499.08331/AU, -4777081873.87396/AU, 'X', color='blue', label="Pluto Closest Approach at 4100km")
 
 #plt.axis('equal')
-plt.legend(loc='upper right')
-#plt.legend(loc='lower right')
+#plt.legend(loc='upper right')
+plt.legend(loc='lower right')
 plt.xlabel('Distance from Sun in x-direction (AU)', x=0.57, fontsize=11)
 plt.ylabel('Distance from Sun in y-direction (AU)', loc='bottom', fontsize=11)
 #plt.title('Heliocentric Orbits of the Considered Bodies')
-plt.xticks(rotation=90)
+#plt.xticks(rotation=90)
 plt.show()
-#fig.savefig('output three jupiter encounter.png', format='png', dpi=1200)
+#fig.savefig('transparency test.png', format='png', dpi=1200, transparent=True)
 
 
 
@@ -353,4 +344,4 @@ plt.ylabel('Heliocentric Velocity (km/s)', fontsize=11)
 plt.xticks(fontsize=11)
 plt.yticks(fontsize=11)
 plt.show()
-#fig.savefig('output four brake velocity.png', format='png', dpi=1200)
+fig.savefig('transparent velocity for poster.png', format='png', dpi=1200, transparent=True)
